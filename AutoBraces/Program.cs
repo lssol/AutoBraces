@@ -8,9 +8,10 @@ namespace AutoBraces
         static void Main(string[] args)
         {
             string sql;
+            var path = args[0];
             try
             {
-                sql = File.ReadAllText(args[0]);
+                sql = File.ReadAllText(path);
             }
             catch (Exception e)
             {
@@ -21,9 +22,13 @@ namespace AutoBraces
             var autoBraces = new AutoBraces();
             var newSql = autoBraces.AddBracesToAllNecessaryTokens(sql);
             
-            Console.WriteLine("Old String: {0}", sql);
-            Console.WriteLine("New String: {0}", newSql);
+            Console.WriteLine("Old Script -----------------------------------");
+            Console.WriteLine(sql);
+            Console.WriteLine("\n\nNew Script -----------------------------------");
+            Console.WriteLine(newSql);
 
+            FileHandler.CreateNewFile(path, newSql);
+            
             Console.ReadKey();
         }
     }

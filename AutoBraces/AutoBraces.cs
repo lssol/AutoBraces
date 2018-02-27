@@ -1,10 +1,20 @@
-﻿using System.Data.SqlTypes;
+﻿using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.IO;
+using System.Linq;
 using Microsoft.SqlServer.Management.SqlParser.Parser;
 
 namespace AutoBraces
 {
     public class AutoBraces
     {
+        private readonly List<string> _keywords;
+
+        public AutoBraces()
+        {
+            _keywords = File.ReadAllText("keywords.txt").Split('\n').Select(s => s.ToLower()).ToList();
+        }
+
         public string AddBracesToAllNecessaryTokens(string sqlScript)
         {
             var po = new ParseOptions();
@@ -36,6 +46,8 @@ namespace AutoBraces
         private string AddBracesToTokenIfNecessary(string token, Tokens tokenType)
         {
             if (tokenType != Tokens.TOKEN_ID)
+                return token;
+            if (_keywords.Contains(token))
                 return token;
             if (token.Substring(0, 1) == "[")
                 return token;
